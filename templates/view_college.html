@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{%block content%}
+{% for message in get_flashed_messages()%}
+<div class="alert {% if 'Deleted' in message %}alert-success{% elif 'Cannot find' in message %}alert-danger{% else %}alert-info{% endif %} alert-dismissible fade show" role="alert">
+    <strong>{{message}}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endfor %}           
+
+{% if course_name %}
+            <table class="table table-dark table-striped">
+                <thead class="table-dark">
+                    <center><b>COLLEGES OFFERING {{streams}} IN {{course_name}}</b></center>
+                    <br>
+                    
+                    <tr>
+                        <th scope="col">College Name</th>
+                        <th scope="col">Address</th>
+                        <th scope="col">Web</th>
+                        {% if current_user.is_authenticated%}
+                        <th scope="col">Delete</th>
+                        {%endif%}
+                    </tr>
+                </thead>
+                <tbody>
+                    <tbody class="table-group-divider">
+                        {% for college in colleges %}
+                             <tr>
+                                <td>{{ college.college_name }}</td>
+                                <td>{{ college.college_address }}</td>
+                                <td><a href="{{ college.college_web }}" onclick="window.open('{{ college.college_web }}', '_blank'); return false;">{{ college.college_web }}</a></td>
+                                {% if current_user.is_authenticated%}
+                                <td><a href="{{url_for('delete_college',id=college.college_id)}}" class="btn btn-outline-danger btn-sm">Delete</a></td>
+                                {%endif%}
+                            </tr>
+                       
+                        {% endfor %}
+                        </tbody>
+                        
+                </tbody>
+            </table>
+</div>
+{%else%}
+<center>
+    {% if current_user.is_authenticated%}
+    <br><br><br>
+    <br><br><br>
+    <br><br><br>
+
+    <button type="button" class="btn btn-dark">
+    <a class="nav-link" href="{{url_for('add_clg',id=stream_id)}}">Add College</a>
+    </button>
+
+    {%else%}
+<div class="col-8">
+    <br>
+    <br>
+    <br>
+    <img src="{{url_for('static',filename='images/unhappy.jpg')}}" width="300" align="center"></img>
+  </div>
+</center>
+{%endif%}
+{% endif%}      
+{%endblock%}

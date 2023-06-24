@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+
+{%block content%}
+{% for message in get_flashed_messages()%}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{message}}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endfor %}           
+
+<h1>{{ courses.course_name}}</h1><br>
+
+    <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
+
+       <strong> </strong><br><br> 
+        {{ courses.content}}<br><br>
+{% if current_user.is_authenticated %}
+<a href="{{url_for('delete',id=courses.course_id)}}" class="btn btn-outline-danger btn-sm">Delete</a>
+{% for stream in streams %}
+<a href="{{url_for('add_clg',id=stream.stream_id)}}" class="btn btn-outline-secondary btn-sm">{{stream.stream_name}}</a>
+{%endfor%}
+{%endif%}
+
+</div>
+        
+{%endblock%}

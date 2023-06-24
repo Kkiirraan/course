@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+
+{%block content%}
+{% for message in get_flashed_messages()%}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{message}}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endfor %}
+<form method='POST'class="row g-3">
+{{ form.hidden_tag() }}
+<div class="col-12 d-flex justify-content-center">
+    <h2 style="font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;">Add Course</h2>          
+        </div>
+    <div class="col-12">
+        {{ form.course_name.label(class="form-label")}}
+        {{form.course_name(class="form-control")}}<br>
+    </div>
+    <div class="col-12">
+        {{ form.course_title.label(class="form-label")}}
+        {{form.course_title(class="form-control")}}<br>
+    </div>
+    <div class="col-12">
+        {{ form.content.label(class="form-label")}}
+        {{form.content(class="form-control",rows="5")}}
+    </div>
+   
+
+
+    <div class="col-12">
+     <div class="container"> 
+      <div class="card mt-5">
+        <div class="card-header">
+       <h5>Add Stream</h5>
+        </div>
+        <div class="card-body">
+  <div id="course_class">
+
+            <div class="row" id="row1">
+             <div class="col-2">
+                <label>Stream 1</college>
+               <input type="text" class="form-control" name="stream1">
+             </div> 
+           </div>
+
+    </div>
+<button type="button" class="btn btn-dark float-right mt-2" onClick="add_more_field()">Add more</button>
+        </div>
+        </div>
+        </div>
+<form>
+    <br>
+    <div class="col-12 d-flex justify-content-center">
+{{form.submit(class="btn btn-dark")}}
+    </div>
+  </form>
+  <script>
+    var counter = 1;
+
+    function add_more_field() {
+        counter += 1;
+        var html = '<div class="row" id="row1' + counter + '">\
+            <div class="col-2">\
+                <label>Stream '+counter+'</label>\
+                <input type="text" class="form-control" name="stream'+ counter +'">\
+            </div>\
+        </div>';
+
+        var form = document.getElementById('course_class');
+        form.innerHTML += html;
+    }
+</script>
+{%endblock%}

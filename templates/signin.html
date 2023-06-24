@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{%block content%}
+{% for message in get_flashed_messages()%}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{message}}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endfor %}
+{% for message in form.password_hash.errors%}
+<div class="alert alert-danger alert-dismissible fade show" role="alert">
+    <strong>{{message}}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endfor %}
+<form method='POST'class="row g-3">
+{{ form.hidden_tag() }}
+<div class="col-12 d-flex justify-content-center">
+    <h2>Sign up Here</h2>          
+        </div>
+    <div class="col-md-6">
+        {{ form.first_name.label(class="form-label")}}
+        {{form.first_name(class="form-control")}}<br>
+    </div>
+    <div class="col-md-6">
+    {{ form.last_name.label(class="form-label")}}
+      {{form.last_name(class="form-control")}}<br>
+    </div>
+    <div class="col-12">
+        {{ form.user_name.label(class="form-label")}}
+        {{form.user_name(class="form-control")}}<br>
+    </div>
+    <div class="col-12">
+        {{ form.email.label(class="form-label")}}
+        {{form.email(class="form-control")}}<br>
+    </div>
+    <div class="col-md-6">
+        {{ form.password_hash.label(class="form-label")}}
+        {{form.password_hash(class="form-control")}}<br>
+    </div>
+    <div class="col-md-4">
+        {{ form.confirm_password.label(class="form-label")}}
+        {{form.confirm_password(class="form-control")}}<br>
+    </div>
+    </div>
+    <div class="col-12 d-flex justify-content-center">
+{{form.submit(class="btn btn-dark")}}
+      
+    </div>
+  
+  </form>
+{%endblock%}

@@ -1,0 +1,74 @@
+{% extends 'base.html' %}
+
+{%block content%}
+{% for message in get_flashed_messages()%}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{message}}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endfor %}
+<form method='POST'class="row g-3">
+    <div class="col-12">
+     <div class="container"> 
+      <div class="card mt-5">
+        <div class="card-header">
+       <h5>Add College for {{streams.stream_name}} for {{courses.course_name}}</h5>
+        </div>
+        <div class="card-body">
+  <div id="course_class">
+
+            <div class="row" id="row1">
+             <div class="col-8">
+                <label>college 1</college>
+               <input type="text" class="form-control" name="college1">
+             </div> 
+             <div class="col-8">
+                <label>Address 1</college>
+               <input type="text" class="form-control" name="address1">
+             </div> 
+             <div class="col-8">
+                <label>Link 1</college>
+               <input type="text" class="form-control" name="link1">
+             </div> 
+           </div>
+           <br>
+           <div class="separated-div" style="border-bottom: 1px solid #000;"></div>
+
+    </div>
+
+<button type="button" class="btn btn-dark float-right mt-2" onClick="add_more_field()">Add more</button>
+        </div>
+        </div>
+        </div>
+<form>
+    <br>
+    <div class="col-12 d-flex justify-content-center">
+<input type="submit" value="Submit" class="btn btn-dark"></input>
+    </div>
+  </form>
+  <script>
+    var counter = 1;
+
+    function add_more_field() {
+        counter += 1;
+        var html = '<div class="row" id="row1' + counter + '">\
+            <div class="col-8">\
+                <label>College '+counter+'</label>\
+                <input type="text" class="form-control" name="college'+ counter +'">\
+            </div>\
+            <div class="col-8">\
+                <label>Address '+counter+'</label>\
+                <input type="text" class="form-control" name="address'+ counter +'">\
+            </div>\
+            <div class="col-8">\
+                <label>Link '+counter+'</label>\
+                <input type="text" class="form-control" name="link'+ counter +'">\
+            </div>\
+        </div><br>\
+    <div class="separated-div" style="border-bottom: 1px solid #000;"></div>';
+
+        var form = document.getElementById('course_class');
+        form.innerHTML += html;
+    }
+</script>
+{%endblock%}
