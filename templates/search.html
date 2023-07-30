@@ -4,7 +4,7 @@
    {% if courses %}
    {% for course in courses%}
    <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
-      <strong> {{ course.course_name}}</strong><br><br> 
+      <strong> {{ course.course_name | upper}}</strong><br><br> 
        {{ course.course_title}}<br><br>
 <a href="{{url_for('view_ind',id=course.course_id)}}" class="btn btn-outline-secondary btn-sm">More</a>
 

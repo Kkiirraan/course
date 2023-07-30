@@ -279,7 +279,7 @@ def v_college(id):
                 print(stream.stream_name)
             course_name = stream.course.course_name.upper()
             print(course_name)      
-            return render_template('view_college.html',colleges=colleges,streams=stream.stream_name.upper(),course_name=course_name)
+            return render_template('view_college.html',colleges=colleges,streams=stream,course_name=course_name)
         else:
             streams=Stream.query.filter_by(stream_id=id).first()
             flash('Cannot find Colleges for this particular course.')
@@ -317,15 +317,100 @@ def delete_college(id):
                 print(stream.stream_name)
             course_name = stream.course.course_name.upper()
             print(course_name)      
-            return render_template('view_college.html',colleges=colleges,streams=stream.stream_name.upper(),course_name=course_name)
+            return render_template('view_college.html',colleges=colleges,streams=stream,course_name=course_name)
         else:
             streams=Stream.query.filter_by(stream_id=id).first()
             flash('Cannot find Colleges for this particular course.')
-            return render_template('view_college.html',colleges=colleges,streams=streams.stream_name.upper(),stream_id=streams.stream_id)
+            return render_template('view_college.html',colleges=colleges,streams=streams,course_name=streams.stream_id)
     except:
             flash('Whoops error in deleting the post.')
             courses=Course.query.all()
             return render_template("view_college.html",courses=courses)
+        
+        
+@app.route('/add_more_stream/<int:id>',methods=['POST','GET'])
+@login_required
+def add_more_stream(id):
+    print(id)
+    if request.method == 'POST':
+        counter=1
+        while True:
+            stream_key = f'stream{counter}'
+            print(stream_key)
+            if stream_key in request.form:
+                    stream = request.form[stream_key]
+                    stream=Stream(stream_name=stream,course_id=id)
+                    db.session.add(stream)
+                    db.session.commit()
+                    print(stream)
+                    counter+=1
+            else:
+                break
+        stream=Stream.query.filter_by(course_id=id).all()
+        course=Course.query.filter_by(course_id=id).first()
+        print(course)        
+        flash("Course Added successfully.")   
+        return render_template('view_ind.html',streams=stream,courses=course)
+        
 
+@app.route('/delete_stream/<int:id>',methods=['POST','GET'])
+@login_required
+def delete_stream(id):
+        print(id)
+        stream_to_delete=Stream.query.get_or_404(id)
+        print(stream_to_delete)
+        try:
+            db.session.delete(stream_to_delete)
+            db.session.commit()
+            flash('We deleted a Stream.')
+            course=Course.query.filter_by(course_id=stream_to_delete.stream_id).first()
+            stream=Stream.query.filter_by(course_id=course.course_id).all()
+            return render_template('view_ind.html',streams=stream,courses=course)
+        except:
+               flash('Whoops error in deleting the post.')
+               course=Course.query.filter_by(course_id=stream_to_delete.course_id).first()
+               stream=Stream.query.filter_by(course_id=course.course_id).all()
+               return render_template('view_ind.html',streams=stream,courses=course)
+               
+@app.route('/add_more_clg/<int:id>',methods=['POST','GET'])
+@login_required
+def add_more_clg(id):
+    print(id)
+    if request.method == 'POST':
+        counter=1
+        while True:
+            college_name = f'college{counter}'
+            college_address=f'address{counter}'
+            college_link=f'link{counter}'
+            print(college_link)
+            print(college_name)
+            print(college_address)
+            
+            if college_name in request.form and college_address in request.form and college_link in request.form:
+                clg_name = request.form[college_name]
+                clg_address=request.form[college_address]
+                clg_link=request.form[college_link]
+                print(clg_name)
+                print(clg_address)
+                print(clg_link)
+                
+                college=College(college_name=clg_name,college_address=clg_address,college_web=clg_link,stream_id=id)
+                db.session.add(college)
+                db.session.commit()
+                counter+=1
+            else:
+                print("jiiii")
+                break;
+        
+        colleges=College.query.filter_by(stream_id=id).all()
+        print(colleges)
+        stream=Stream.query.filter_by(stream_id=id).first()
+        print(stream)
+        course=Course.query.filter_by(course_id=stream.course_id).first()
+        print(course)
+        flash("College Added successfully.")   
+        return render_template('view_college.html',colleges=colleges,streams=stream,course_name=course.course_name)
+        
+             
 if __name__=='__main__':
     app.run(debug=True)

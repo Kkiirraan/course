@@ -1,0 +1,60 @@
+
+/* body{
+    
+    background-color: aquamarine;
+}  */
+.wrapper{
+display: inline-flex;
+
+}
+.wrapper .static-text{
+font-size: 60px;
+color: cadetblue;
+font-weight: 400px;
+}
+
+.wrapper .dynamic-txts{
+margin-left: 5px;
+height: 90px;
+line-height: 90px;
+overflow: hidden;
+color: teal;
+}
+
+.dynamic-txts li{
+list-style: none;
+font-size: 80px;
+font-weight: 500px;
+position:relative;
+top:0;
+animation: sliding 12s steps(1) infinite;
+
+}
+@keyframes sliding {
+    100%{
+        top:-360px;
+        margin: 0 -35px 0 35px;
+        opacity: 0;
+    }
+
+}
+.dynamic-txts li span{
+    position: relative;
+}
+.dynamic-txts li span::after{
+    content: "";
+    position: absolute;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    border-left: 4px solid teal;
+    background-color:  white;
+    animation: typing 2s steps(12) infinite;
+
+}
+@keyframes typing {
+    100%{
+        left:100%;
+        margin: 0 -35px 0 35px;
+    }
+}

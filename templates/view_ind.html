@@ -23,14 +23,69 @@
 <u><em>You can click on below buttons to view and add college details.</em></u>
 <br>
 <br>
-{%endif%}
 <u>
 <em>These are the Streams Avaliable for {{courses.course_name}}</em>
 </u>
 <br><br>
-{% for stream in streams %}
-<a href="{{url_for('v_college',id=stream.stream_id)}}" class="btn btn-outline-secondary btn-sm">{{stream.stream_name}}</a>
-{%endfor%}
+<div id="course_class">
+  <form action="{{ url_for('add_more_stream',id=courses.course_id) }}" method="POST">
+  {% for stream in streams %}
+  <div class="d-inline-block">
+    <div class="btn-group" role="group">
+    <a href="{{url_for('v_college',id=stream.stream_id)}}" class="btn btn-outline-secondary btn-sm">{{stream.stream_name}}</a>
+    <a href="{{url_for('delete_stream',id=stream.stream_id)}}" class="btn btn-outline-secondary btn-sm"><i class="material-icons" style="font-size:20px">delete</i></a>
+    </div>
+  </div>
+  {% endfor %}
+  <div id="inputFieldsContainer" class="d-inline-block"></div>
+  <div id="submitButtonContainer" class="d-inline-block"></div>
+  
+  <button type="button" class="btn btn- float-right" onClick="add_more_field()"><i class="material-icons"style="font-size:20px">add</i></button>
+</form>
 </div>
-        
+{%else%}
+<br>
+<u>
+<em>These are the Streams Avaliable for {{courses.course_name}}</em>
+</u><br><br>
+{% for stream in streams %}
+<div class="d-inline-block">
+  <div class="btn-group" role="group">
+  <a href="{{url_for('v_college',id=stream.stream_id)}}" class="btn btn-outline-secondary btn-sm">{{stream.stream_name}}</a>
+  </div>
+</div>
+{% endfor %}
+{%endif%}
+
+<script>
+  var counter = 0;
+
+  function add_more_field() {
+    counter += 1;
+    var html = '\
+      <div class="row align-items-left" id="col' + counter + '">\
+        <div class="col-10">\
+          <input type="text" class="form-control" name="stream' + counter + '">\
+        </div>\
+      </div>';
+
+    var inputFieldsContainer = document.getElementById('inputFieldsContainer');
+    var newField = document.createElement('div');
+    newField.classList.add('d-inline-block');
+    newField.innerHTML = html;
+
+    inputFieldsContainer.appendChild(newField);
+
+    // Move the submit button after the input fields
+    var submitButtonContainer = document.getElementById('submitButtonContainer');
+    if (submitButtonContainer.childElementCount === 0) {
+      var submitButton = document.createElement('button');
+      submitButton.setAttribute('type', 'submit');
+      submitButton.setAttribute('class', 'btn btn-primary');
+      submitButton.innerHTML = 'Submit';
+      submitButtonContainer.appendChild(submitButton);
+    }
+  }
+</script>
+
 {%endblock%}

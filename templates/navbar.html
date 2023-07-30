@@ -14,7 +14,7 @@
             <a class="nav-link" aria-current="page" href="{{url_for('dashboard')}}">Dashboard</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" aria-current="page" href="{{url_for('logout')}}">logout</a>
+            <a class="nav-link" aria-current="page" href="{{url_for('logout')}}" value="logout" onclick="return confirmLogout()" id="logout">logout</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="{{url_for('add_course')}}">Add Course</a>
@@ -22,9 +22,7 @@
           <li class="nav-item">
             <a class="nav-link" href="{{url_for('view_course')}}">Edit Course</a>
           </li>
-          <li class="nav-item">
-            <a class="nav-link" href="{{url_for('view_to_add')}}">Add College</a>
-          </li>
+        
           {% else%}
           
           <li class="nav-item">
@@ -41,7 +39,8 @@
           </li>
           {% endif%}
 
-        </ul>
+      </ul>
+        
         <form method="POST" action="{{url_for('search')}}" class="d-flex" role="search">
           {{ form.hidden_tag() }}
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="searched">
@@ -49,6 +48,33 @@
         </form>
       </div>
     </div>
-    
-  </nav>
+   
+ 
 
+  <script>
+    function showToast() {
+      var toast = document.getElementById('toast');
+      toast.style.display = 'block';
+    }
+
+    document.getElementById("logout").addEventListener("submit", function(event) {
+      // Prevent form submission
+      event.preventDefault();
+    
+      // Call confirmLogout function
+      confirmLogout();
+    });
+    
+  function confirmLogout() {
+      if (confirm("Are you sure you want to logout?")) {
+        // If user confirms, submit the logout form
+        document.querySelector(".logout-form").submit();
+      } else {
+        // If user cancels, do nothing
+        return false;
+      }
+    }
+    
+</script>  
+  </nav>
+ 
