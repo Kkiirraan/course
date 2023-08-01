@@ -1,5 +1,11 @@
 {% extends 'base.html' %}
 {%block content%}
+<style>
+.hover-effect:hover {
+  transform: scale(1.05); /* Scale the div slightly when hovered */
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5); /* Add a shadow effect */
+}
+</style>
 {% for message in get_flashed_messages()%}
 <div class="alert alert-success alert-dismissible fade show" role="alert">
     <strong>{{message}}</strong>
@@ -49,7 +55,7 @@
     
         
     {% for course in courses%}
-    <div class="shadow p-3 mb-5 bg-body-tertiary rounded">
+    <div class="shadow p-3 mb-5 bg-body-tertiary rounded hover-effect">
        <strong> {{ course.course_name | upper}}</strong><br><br> 
         {{ course.course_title}}<br><br>
 <a href="{{url_for('view_ind',id=course.course_id)}}" class="btn btn-outline-secondary btn-sm">More</a>
