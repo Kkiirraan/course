@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{%block content%}
+{% for message in get_flashed_messages()%}
+<div class="alert alert-success alert-dismissible fade show" role="alert">
+    <strong>{{message}}</strong>
+    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+  </div>
+{% endfor %}
+
+
+<div class="col-12 d-flex justify-content-center">
+    <form action="/home_img" method="post" enctype="multipart/form-data">
+{{ form.hidden_tag() }}
+    <div class="card-body d-flex flex-column justify-content-center align-items-center">
+   <h3> Add Images to the home page.</h3>
+   <br>
+   <br>
+        <p class="card-text mt-3">
+
+        <label for="image">Select an image:</label>
+        <input type="file" id="image" name="image">
+    </p>
+    <br>
+    <br>
+        <input type="submit" value="Upload" class="btn btn-secondary">
+        <br>
+    </div>
+  
+       
+    </form>
+    <br>
+</div>
+
+    <center>
+      {% if imgs %}
+      {% for img in imgs%}
+      <div class="card">
+        <div class="card-body">
+<img src="{{url_for('static',filename="images/" + img.home_img )}}" class="d-block w-100" alt="jdiidi"  height="200" style="border-radius: 20px; max-width: 50%; width:100">
+<br>
+<a href="{{url_for('delete_home_img',id=img.home_id)}}" class="btn btn-outline-secondary btn-sm">Delete</a>
+
+<br>
+      </div>
+    </div>
+    <br>
+      {%endfor%}
+      {% endif%}
+
+</center>
+{%endblock%}

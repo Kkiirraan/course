@@ -6,6 +6,10 @@ from flask_migrate import Migrate
 from werkzeug.security import check_password_hash,generate_password_hash
 from flask_login import UserMixin,login_user,LoginManager,login_required,logout_user,current_user
 from forms import AdminForm,LoginForm,CourseForm,SearchForm
+from werkzeug.utils import secure_filename
+import uuid as uuid
+import os
+
 
 app=Flask(__name__)
 app.config['SECRET_KEY']='kirrrra'
@@ -13,6 +17,9 @@ app.config['SECRET_KEY']='kirrrra'
 app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///users.db'
 db=SQLAlchemy(app)
 migrate=Migrate(app, db)
+
+UPLOAD_FOLDER='static/images/'
+app.config['UPLOAD_FOLDER']=UPLOAD_FOLDER
 #login things
 login_manager=LoginManager()
 login_manager.init_app(app)
@@ -57,7 +64,7 @@ class Course(db.Model):
     course_title=db.Column(db.String(255),nullable=False)
     content=db.Column(db.String(255),nullable=False)
     date_posted=db.Column(db.DateTime,default=datetime.utcnow)    
-    
+    course_pic=db.Column(db.String(),nullable=True)
     streams = db.relationship('Stream', backref='course', lazy=True,cascade="all, delete-orphan")
     
     def __repr__(self):
@@ -85,13 +92,28 @@ class College(db.Model):
      #create a string
     def __repr__(self):
         return '<college_name %r>' % self.college_name
-                        
+
+class HomeImage(db.Model):
+    home_id=db.Column(db.Integer,primary_key=True)
+    home_img=db.Column(db.String(),nullable=True)    
+    def __repr__(self):
+            return '<college_name %r>' % self.home_img                     
 
 @app.route('/')
 def home():
     courses=Course.query.all()
+    home_img=HomeImage.query.all()
+    
     print(courses)
-    return render_template('home.html',courses=courses)
+    print(home_img)
+    if courses and home_img:
+     return render_template('home.html',courses=courses,home_img=home_img)
+    elif courses:
+     return render_template('home.html',courses=courses)
+    else:
+     return render_template('home.html',courses=courses)
+        
+         
 
 @app.route('/signin',methods=['POST','GET'])
 def signin():
@@ -150,6 +172,7 @@ def dashboard():
        return render_template('dashboard.html',courses=courses)
     else:
        return render_template('dashboard.html',courses=courses)
+       
 
 #logout  page
 @app.route('/logout',methods=['GET','POST'])
@@ -165,8 +188,17 @@ def logout():
 def add_course():
     form=CourseForm()
     if form.validate_on_submit():
-        course=Course(course_name=form.course_name.data,course_title=form.course_title.data,content=form.content.data)
         print(form.course_name.data)   
+        course_pic=form.course_pic.data
+        print(course_pic)
+        #saving image
+
+        #making image name
+        pic_filename=secure_filename(course_pic.filename)
+        #set uuid
+        pic_name=str(uuid.uuid1())+ "_" + pic_filename
+        course_pic.save(os.path.join(app.config['UPLOAD_FOLDER'],pic_name))
+        course=Course(course_name=form.course_name.data,course_title=form.course_title.data,content=form.content.data,course_pic=pic_name)
         db.session.add(course) 
         db.session.commit()
         counter=1
@@ -202,7 +234,7 @@ def view_course():
 def view_ind(id):
     print(id)
     courses=Course.query.filter_by(course_id=id).first()
-    print(courses)
+    print(courses.course_pic)
     streams = courses.streams
  
     print(streams)
@@ -410,7 +442,72 @@ def add_more_clg(id):
         print(course)
         flash("College Added successfully.")   
         return render_template('view_college.html',colleges=colleges,streams=stream,course_name=course.course_name)
+
+@app.route('/home_img',methods=['GET','POST'])        
+def home_img():
+        if request.method=='POST':
+            home_img=request.files['image']
+            print(home_img)
+            pic_filename=secure_filename(home_img.filename)
+        #set uuid
+            pic_name=str(uuid.uuid1())+ "_" + pic_filename
+            home_img.save(os.path.join(app.config['UPLOAD_FOLDER'],pic_name))
+            homeimg=HomeImage(home_img=pic_name)
+            db.session.add(homeimg) 
+            db.session.commit()   
+            flash("Successfully Added Image")   
+            imgs=HomeImage.query.all()
+            print(imgs)
+            return render_template('home_img.html',imgs=imgs)
+        else:   
+            imgs=HomeImage.query.all()
+            return render_template('home_img.html',imgs=imgs)   
         
+@app.route('/delete_home_img/<int:id>',methods=['POST','GET'])        
+def delete_home_img(id):
+        print(id)
+        home_img=HomeImage.query.get_or_404(id)
+        print(home_img)
+        try:
+            db.session.delete(home_img)
+            db.session.commit()
+            flash('Image deleted Successfully.')
+            imgs=HomeImage.query.all()
+            print(imgs)
+            return render_template('home_img.html',imgs=imgs)
+        except:
+               flash('Whoops error in deleting the post.')
+               imgs=HomeImage.query.all()
+               return render_template('home_img.html',imgs=imgs)
+               
+@app.route('/update/<int:id>',methods=['POST','GET'])
+@login_required
+def update(id):             
+    form=CourseForm()
+    course_to_update=Course.query.get_or_404(id)  
+    if request.method=='POST':
+         course_to_update.course_name=request.form['course_name']
+         course_to_update.course_title=request.form['course_title']
+         course_to_update.content=request.form['content']
+         course_to_update.course_pic=request.files['course_pic']
+         pic_filename=secure_filename(course_to_update.course_pic.filename)
+         print(pic_filename)
+            #set uuid
+         pic_name=str(uuid.uuid1())+ "_" + pic_filename
+         request.files['course_pic'].save(os.path.join(app.config['UPLOAD_FOLDER'],pic_name))
+         print(form.course_name.data)
+         print(pic_name)
+         course_to_update.course_pic=pic_name
+         try:
+             db.session.commit()
+             flash('Updated successfully!')
+             return render_template('update_course.html',form=form,course_to_update=course_to_update)
+         except:
+            #  db.session.rollback()
+             flash('Error!')
+             return render_template('update_course.html',form=form,course_to_update=course_to_update)
+    else:
+             return render_template('update_course.html',form=form,course_to_update=course_to_update,id=id)
              
 if __name__=='__main__':
     app.run(debug=True)

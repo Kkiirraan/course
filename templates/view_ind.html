@@ -16,8 +16,15 @@
       <strong><em>{{courses.course_title}}</em></strong>
         <br><br> 
         {{ courses.content}}<br><br>
+{% if courses.course_pic %}
+<img src="{{url_for('static',filename="images/" + courses.course_pic )}}" class="d-block w-100" alt="jdiidi" width="50" height="500" style="border-radius: 20px; max-width: 50%;">
+
+{% endif%}        
+<br>
 {% if current_user.is_authenticated %}
 <a href="{{url_for('delete',id=courses.course_id)}}" class="btn btn-outline-danger btn-sm">Delete</a>
+<a href="{{url_for('update',id=courses.course_id)}}" class="btn btn-outline-primary btn-sm">Update</a>
+
 <br>
 <br>
 <u><em>You can click on below buttons to view and add college details.</em></u>

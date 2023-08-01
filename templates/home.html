@@ -16,35 +16,34 @@
         <li><span style="font-family: 'Sofia', sans-serif;">Kindu's Coursera</span></li>
     </ul>
 </div>
-  <div class="p-3 m-0 border-0 bd-example m-0 border-0">
-<div id="carouselExampleIndicators" class="carousel slide" style="max-width: 100%; border-radius:20px">
-        <div class="carousel-indicators">
-          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
-          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
-          <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
-        </div>
-        <div class="carousel-inner">
-          <div class="carousel-item active">
-            <img src="{{url_for('static',filename="images/tom hardy.jpg")}}" class="d-block w-100" alt="hiiii" width="100%" height="500" style="border-radius: 20px;">
-
-          </div>
-          <div class="carousel-item" >
-            <img src="{{url_for('static',filename="images/tom holland.jpg")}}" class="d-block w-100" alt="jdiidi" width="700"  height="500" style="border-radius: 20px;">
-          </div>
-          <div class="carousel-item">
-            <img src="{{url_for('static',filename="images/zendaya.jpg")}}" class="d-block w-100" alt="..." width="700" height="500" style="border-radius: 20px;">
-          </div>
-        </div>
-        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
-          <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
-          <span class="carousel-control-next-icon" aria-hidden="true"></span>
-          <span class="visually-hidden">Next</span>
-        </button>
-      </div>
+{% if home_img %}
+<div class="p-3 m-0 border-0 bd-example m-0 border-0">
+  <div id="carouselExampleIndicators" class="carousel slide" style="max-width: 100%; border-radius: 20px; height:500px; width:100%;">
+    <div class="carousel-indicators">
+      {% for i in home_img %}
+      <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ loop.index0 }}" {% if loop.first %}class="active"{% endif %} aria-label="Slide {{ loop.index }}">
+      </button>
+      {% endfor %}
     </div>
+    <div class="carousel-inner">
+      {% for i in home_img %}
+      <div class="carousel-item {% if loop.first %}active{% endif %}">
+        <img src="{{ url_for('static', filename='images/' + i.home_img) }}" class="d-block w-100" alt="hiiii" style="border-radius: 20px; max-width: 100%; height:500px;width:100%">
+      </div>
+      {% endfor %}
+    </div>
+    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+      <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Previous</span>
+    </button>
+    <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+      <span class="carousel-control-next-icon" aria-hidden="true"></span>
+      <span class="visually-hidden">Next</span>
+    </button>
+  </div>
+</div>
+{% endif %}
+<br>
   </center>
 <h1 style="font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;">All Listed courses</h1><br>
     

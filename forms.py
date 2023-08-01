@@ -29,7 +29,7 @@ class CourseForm(FlaskForm):
     course_name=StringField("Course name:",validators=[DataRequired()])
     course_title=StringField("Course title:",validators=[DataRequired()])
     content=StringField("Add content:",validators=[DataRequired()],widget=TextArea())
-    
+    course_pic=FileField("Course Pic")
     submit=SubmitField("submit")    
     
 #createing search form

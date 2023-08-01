@@ -10,26 +10,27 @@
 <form method='POST'class="row g-3" enctype="multipart/form-data">
 {{ form.hidden_tag() }}
 <div class="col-12 d-flex justify-content-center">
-    <h2 style="font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;">Add Course</h2>          
+    <h2 style="font-family: 'Palatino Linotype', 'Book Antiqua', Palatino, serif;">Update Course</h2>          
         </div>
     <div class="col-12">
         {{ form.course_name.label(class="form-label")}}
-        {{form.course_name(class="form-control")}}<br>
+        {{form.course_name(class="form-control",value=course_to_update.course_name)}}<br>
     </div>
     <div class="col-12">
         {{ form.course_title.label(class="form-label")}}
-        {{form.course_title(class="form-control")}}<br>
+        {{form.course_title(class="form-control",value=course_to_update.course_title)}}<br>
     </div>
     <div class="col-12">
-        {{ form.content.label(class="form-label")}}
-        {{form.content(class="form-control",rows="5")}}
+        {{ form.content.label(class="form-label") }}
+        <textarea class="form-control" rows="5" name="{{ form.content.name }}" id="{{ form.content.id }}">{{ course_to_update.content }}</textarea>
     </div>
     <div class="col-12">
-        {{ form.course_pic.label(class="form-label")}}
-        {{form.course_pic(class="form-control",rows="5")}}
+        {{ form.course_pic.label(class="form-label") }}<br>
+        {{form.course_pic(class="form-control")}}
+        {% if course_to_update.course_pic %}
+        <img src="{{ url_for('static', filename='images/' + course_to_update.course_pic) }}" style="border-radius: 20px; max-width: 30%;">
+{%endif%}
     </div>
-
-
     <div class="col-12">
      <div class="container"> 
       <div class="card mt-5">
